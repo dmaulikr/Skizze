@@ -1,0 +1,45 @@
+//
+//  SketchyViewController.h
+//  Sketchy
+//
+//  Created by Developer on 18/04/2010.
+//  Copyright Michael May 2010. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <AudioToolbox/AudioToolbox.h>
+#import <MessageUI/MFMailComposeViewController.h>
+
+#import "SketchingSpaceView.h"
+#import "RotaryDial.h"
+
+@interface SketchyViewController : UIViewController <UIActionSheetDelegate, MFMailComposeViewControllerDelegate> {
+	SystemSoundID			shakingSoundEffect;
+	SystemSoundID			dinkSoundEffect;
+	SystemSoundID			cameraClickSoundEffect;
+	SystemSoundID			buttonClickSoundEffect;
+	
+	SketchingSpaceView		*sketchingSpace;
+	UIButton				*sketchyTitle;
+	
+	RotaryDial				*rotaryDialUpDown;
+	RotaryDial				*rotaryDialLeftRight;
+	
+	NSUInteger				dialRotationAttenuation;
+	
+	BOOL					wasDrawGesture;
+}
+
+@property (retain) IBOutlet UIView *sketchingSpace;
+@property (retain) IBOutlet UIButton *sketchyTitle;
+@property (retain) IBOutlet RotaryDial *rotaryDialUpDown;
+@property (retain) IBOutlet RotaryDial *rotaryDialLeftRight;
+
+-(IBAction)showCredits;
+
+-(void)loadCurrentState;
+-(void)saveCurrentState;
+-(void)releaseCurrentState;		// useful when the app goes into the bg and we want to release memory
+
+@end
+

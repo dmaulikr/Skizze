@@ -1,0 +1,91 @@
+//
+//  SketchyAppDelegate.m
+//  Sketchy
+//
+//  Created by Developer on 18/04/2010.
+//  Copyright Michael May 2010. All rights reserved.
+//
+
+#import "SketchyAppDelegate.h"
+#import "SketchyViewController.h"
+
+@implementation SketchyAppDelegate
+
+@synthesize window;
+@synthesize viewController;
+
+#pragma mark -
+
++(NSString*)documentsDirectory {
+	NSArray *arrayPaths = NSSearchPathForDirectoriesInDomains(	NSDocumentDirectory,
+																NSUserDomainMask,
+																YES);
+	
+	return [arrayPaths objectAtIndex:0];
+}
+
++(NSString*)stringByReplacingUserInterfaceIdiomPlaceholder:(NSString*)str {
+	UIDevice *device = [UIDevice currentDevice];
+	
+	if([device respondsToSelector:@selector(userInterfaceIdiom)]) {
+		switch (device.userInterfaceIdiom) {
+			default:
+			case UIUserInterfaceIdiomPhone:
+				return [str stringByReplacingOccurrencesOfString:@"{idiom}" withString:@"phone" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [str length])];
+				break;
+				
+			case UIUserInterfaceIdiomPad:
+				return [str stringByReplacingOccurrencesOfString:@"{idiom}" withString:@"pad" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [str length])];
+				break;
+		}
+	} else {
+		return [str stringByReplacingOccurrencesOfString:@"{idiom}" withString:@"phone" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [str length])];
+	}
+}
+
++(BOOL)isPhoneIdiom {
+	UIDevice *device = [UIDevice currentDevice];
+	
+	if([device respondsToSelector:@selector(userInterfaceIdiom)]) {
+		return (device.userInterfaceIdiom == UIUserInterfaceIdiomPhone);
+	} else {
+		return YES;
+	}
+}
+
+#pragma mark -
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    	
+    // Override point for customization after app launch    
+    [window addSubview:viewController.view];
+	
+	[viewController loadCurrentState];
+	
+    [window makeKeyAndVisible];
+
+	return YES;
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+	// TODO: ideallt we should be releasing resources here
+	[viewController loadCurrentState];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+	[viewController saveCurrentState];
+	[viewController releaseCurrentState];
+}
+
+-(void)applicationWillTerminate:(UIApplication *)application {
+	//[viewController saveCurrentState];
+	//[viewController releaseCurrentState];
+}
+
+- (void)dealloc {
+    [viewController release];
+    [window release];
+    [super dealloc];
+}
+
+
+@end

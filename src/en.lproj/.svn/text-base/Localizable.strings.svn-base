@@ -1,0 +1,19 @@
+/* 
+   Localizable.strings
+   Sketchy
+
+	English
+
+   Created by Michael May on 21/04/2010.
+   Copyright 2010 Michael May. All rights reserved.
+ */
+
+"SaveTitle"="Save";
+"EmailTitle"="Email";
+"ClearConfirmation"="Are you sure you want to erase your last sketch? Once it has been erased it cannot be recovered.";
+"YesText"="Yes";
+"NoText"="No";
+"EmailSubject"="Look what I sketched!";
+"EmailMessage"="Look what I sketched using Skizze for iPad & iPhone. You can download your own copy of the app from http://itunes.com/apps/fourapps";
+"UndoTitle"="Undo";
+"CancelText"="Cancel";

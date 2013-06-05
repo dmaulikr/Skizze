@@ -1,0 +1,23 @@
+//
+//  RotaryDial.h
+//  Sketchy
+//
+//	Will detect movement that is like the twisting of a rotary dial action and
+//	turn that into either the user is turning up, or turning down, the dial events.
+//
+//  Created by Developer on 18/04/2010.
+//  Copyright 2010 Michael May. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface RotaryDial : UIView {
+	NSInteger	degrees;		// in radians
+	UIImage*	dialImage;
+}
+
+@property (retain) UIImage* dialImage;
+
+-(void)rotateByDegrees:(NSInteger)rotationDegrees;
+
+@end

@@ -1,0 +1,18 @@
+//
+//  UIView+Snapshot.h
+//  Sketchy
+//
+//	A category extension to the UIView class so you can take a UIImage snapshot of it
+//
+//  Created by Michael May on 2010-07-01.
+//  Copyright 2010 Michael May. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface UIView (Snapshot)
+
+// you must retain the image you get back if you want to keep it around
+-(UIImage*)takeSnapshot;
+
+@end

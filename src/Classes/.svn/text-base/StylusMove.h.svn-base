@@ -1,0 +1,23 @@
+//
+//  StylusMove.h
+//  Sketchy
+//
+//  Created by Michael May on 18/04/2010.
+//  Copyright 2010 Michael May. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface StylusMove : NSObject <NSCoding> {
+	NSInteger xMovement;
+	NSInteger yMovement;
+}
+
+@property (readonly, nonatomic) NSInteger xMovement;
+@property (readonly, nonatomic) NSInteger yMovement;
+
+-(id)initWithXMovement:(NSInteger)x yMovement:(NSInteger)y;
+
+-(void)markAsInvalid;
+
+@end

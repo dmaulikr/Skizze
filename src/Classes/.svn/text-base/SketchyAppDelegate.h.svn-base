@@ -1,0 +1,44 @@
+//
+//  SketchyAppDelegate.h
+//  Sketchy
+//
+//  Created by Developer on 18/04/2010.
+//  Copyright Michael May 2010. All rights reserved.
+//
+
+//	TODO:
+//	* Right Sound Effect
+//	* Right Image Bevel & Dials
+//	* Dials Rotate on turning
+//	* Test on actual iPad and adjust
+//	* Icon
+//	* Up/Down arrow labels
+//	* Curved edges to the drawing area
+//	* Testing (what happens at edges)
+//	* Maybe a little 'dink' sound effect when you hit the sides
+
+
+
+#import <UIKit/UIKit.h>
+
+@class SketchyViewController;
+
+@interface SketchyAppDelegate : NSObject <UIApplicationDelegate> {
+    UIWindow *window;
+    SketchyViewController *viewController;
+}
+
+@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, retain) IBOutlet SketchyViewController *viewController;
+
++(NSString*)documentsDirectory;
+
+// call with a string of the format @"this string is being run on an {idiom} type device" and it will replace
+// the {idiom} placeholder with the device type pad/phone
++(NSString*)stringByReplacingUserInterfaceIdiomPlaceholder:(NSString*)str;
+
+// handy helper function that tests if this is phone type device (the default if it cannot tell)
++(BOOL)isPhoneIdiom;
+
+@end
+

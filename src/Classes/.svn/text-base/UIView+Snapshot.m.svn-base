@@ -1,0 +1,80 @@
+//
+//  UIView+Snapshot.m
+//  Sketchy
+//
+//	A category extension to the UIView class so you can take a UIImage snapshot of it
+//
+//  Created by Michael May on 2010-07-01.
+//  Copyright 2010 Michael May. All rights reserved.
+//
+
+#import "UIView+Snapshot.h"
+
+@implementation UIView (Snapshot)
+
+// TODO: should be in UIScreen+Scale
++(CGFloat)screenScale {
+	UIScreen *screen = [UIScreen mainScreen];
+	
+	if([screen respondsToSelector:@selector(scale)]) {
+		return (screen.scale);
+	} else {
+		return 1;
+	}
+}
+
+-(UIImage*)takeSnapshot {
+	UIImage* image = nil;
+	
+	@try {
+		CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+		
+		CGFloat viewWidth, 
+				viewHeight;
+		
+		switch([[UIDevice currentDevice] orientation]) {
+			default:
+			case UIDeviceOrientationPortrait:
+			case UIDeviceOrientationPortraitUpsideDown:
+				viewWidth = self.frame.size.width;
+				viewHeight = self.frame.size.height;
+				break;
+				
+			case UIDeviceOrientationLandscapeLeft:
+			case UIDeviceOrientationLandscapeRight:
+				viewWidth = self.frame.size.height;
+				viewHeight = self.frame.size.width;
+				break;
+		}		
+		
+		CGFloat scale = [UIView screenScale];
+		CGContextRef context = CGBitmapContextCreate(NULL, 
+													 viewWidth * scale, 
+													 viewHeight * scale, 
+													 8, 
+													 4 * (viewWidth * scale), 
+													 colorSpace, 
+													 kCGImageAlphaPremultipliedFirst);
+		
+		CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, viewHeight);
+		
+		CGContextConcatCTM(context, flipVertical);
+		
+		[self.layer renderInContext:context];
+		
+		CGImageRef imageRef = CGBitmapContextCreateImage(context);
+		
+		image = [UIImage imageWithCGImage:imageRef];
+		
+		CGImageRelease(imageRef);
+		CGContextRelease(context);
+		CGColorSpaceRelease(colorSpace);
+	} 
+	@catch (NSException * e) {
+		image = nil;
+	}
+	
+	return image;
+}
+
+@end

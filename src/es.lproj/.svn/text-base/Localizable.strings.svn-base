@@ -1,0 +1,19 @@
+/* 
+   Localizable.strings
+   Sketchy
+   
+   Spanish
+
+   Created by Michael May on 21/04/2010.
+   Copyright 2010 Michael May. All rights reserved.
+ */
+
+"SaveTitle"="Außer Zeichnung";
+"EmailTitle"="EMail-Zeichnung";
+"ClearConfirmation"="Sind Sie Sie möchten Ihre letzte Skizze löschen sicher? Sobald sie gelöscht worden ist, kann sie nicht zurückgewonnen werden.";
+"YesText"="Si";
+"NoText"="No";
+"EmailSubject"="Schauen Sie, was ich skizzierte!";
+"EmailMessage"="Schauen Sie, was ich unter Verwendung Skizze auf meinem iPad skizzierte! http://itunes.apple.com/artist/fourapps/id380853617";
+"UndoTitle"="Undo";
+"CancelText"="Cancel";

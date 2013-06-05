@@ -1,0 +1,53 @@
+//
+//  StylusPoint.m
+//  Sketchy
+//
+//  Created by Michael May on 18/04/2010.
+//  Copyright 2010 Michael May. All rights reserved.
+//
+
+#import "StylusMove.h"
+
+@implementation StylusMove
+
+#define xMovementCoderKey @"xMovement"
+#define yMovementCoderKey @"yMovement"
+
+@synthesize xMovement, yMovement;
+
+-(id)initWithXMovement:(NSInteger)x yMovement:(NSInteger)y {
+	if((self = [super init])) {
+		xMovement = x;
+		yMovement = y;
+	}
+	
+	return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+    //self = [super initWithCoder:coder];
+	
+	if(self = [super init]) {
+		xMovement = [coder decodeIntegerForKey:xMovementCoderKey];
+		yMovement = [coder decodeIntegerForKey:yMovementCoderKey];
+	}
+	
+    return self;
+}
+
+-(void)markAsInvalid {
+	xMovement = yMovement = 0;
+}
+
+-(NSString*)description {
+	return [NSString stringWithFormat:@"(%f,%f)", xMovement, yMovement];
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    //[super encodeWithCoder:coder];
+	
+	[coder encodeInteger:xMovement forKey:xMovementCoderKey];
+	[coder encodeInteger:yMovement forKey:yMovementCoderKey];
+}
+
+@end

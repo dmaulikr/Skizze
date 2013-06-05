@@ -1,0 +1,31 @@
+//
+//  SketchingSpaceView.h
+//  Sketchy
+//
+//	This manages the visualisation of drawing the user 
+//	is working on using the array of stylus points it's given.
+//
+//  Created by Developer on 18/04/2010.
+//  Copyright 2010 Michael May. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface SketchingSpaceView : UIView {
+	BOOL			showCurrentPointOnNextDisplay;	// show the last point in a different color so the user can see where they are
+	CGPoint			currentPoint;
+	NSMutableArray	*stylusPoints;
+	UIColor			*stylusColor;
+}
+
+@property (assign) BOOL showCurrentPointOnNextDisplay;
+@property (readonly) NSMutableArray* stylusPoints;
+@property (retain) UIColor* stylusColor;
+
+-(BOOL)addStylusPositionChangeXMovement:(NSInteger)xMovement yMovement:(NSInteger)yMovement;
+
+-(BOOL)undo;
+
+-(void)clear;
+
+@end

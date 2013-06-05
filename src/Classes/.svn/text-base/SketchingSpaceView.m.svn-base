@@ -1,0 +1,161 @@
+//
+//  SketchingSpaceView.m
+//  Sketchy
+//
+//	A quick check using sizeof shows each of these is 12 bytes, which is not bad. But each twist of the dials makes
+//	one of these, so we could end up with alot. We probably need a method that normalises them down to just the minimum 
+//	movements that describe the shape. So x+1,x+1,x+1,y+1 becomes x+3,y+1.
+//	
+//  Created by Michel May on 18/04/2010.
+//  Copyright 2010 Michael May. All rights reserved.
+//
+
+#import "SketchingSpaceView.h"
+#import "StylusMove.h"
+
+@implementation SketchingSpaceView
+
+@synthesize showCurrentPointOnNextDisplay, stylusColor, stylusPoints;
+
+#pragma mark -
+
+-(BOOL)addStylusPositionChangeXMovement:(NSInteger)xMovement yMovement:(NSInteger)yMovement {
+	CGPoint newPoint = CGPointMake(currentPoint.x + xMovement, currentPoint.y + yMovement);
+	
+	if(newPoint.x > 0 && newPoint.x < self.frame.size.width && newPoint.y > 0 && newPoint.y < self.frame.size.height) {
+		StylusMove* stylusPoint = [[StylusMove alloc] initWithXMovement:xMovement yMovement:yMovement];
+
+		@synchronized(stylusPoints) {
+			[stylusPoints addObject:stylusPoint];
+		}
+		
+		[stylusPoint release];
+		
+		[self setNeedsDisplay];
+		
+		return YES;
+	} else {
+		NSLog(@"Off screen point, ignoring");
+	}
+	
+	return NO;
+}
+
+-(BOOL)undo {
+	if([stylusPoints count] > 0) {
+		@synchronized(stylusPoints) {
+			[stylusPoints removeLastObject];
+		}
+		
+		[self setNeedsDisplay];	
+		
+		return YES;
+	}
+	
+	return NO;
+}
+
+-(void)clear {
+	NSLog(@"clear");
+	
+	if([stylusPoints count] > 0) {
+		@synchronized(stylusPoints) {
+			[stylusPoints removeAllObjects];
+		}
+		[self setNeedsDisplay];	
+	}	
+}
+
+#pragma mark -
+
+-(void)didMoveToSuperview {
+	currentPoint = self.center;
+}
+
+#pragma mark -
+
+-(void)initialization {
+	// Initialization code
+	stylusPoints = [[NSMutableArray alloc] init];
+	self.stylusColor = [UIColor blackColor];
+		
+	//currentPoint = CGPointMake(roundf(self.frame.size.width / 2.0),roundf(self.frame.size.height / 2.0));
+}
+
+- (id)initWithFrame:(CGRect)frame {
+    if ((self = [super initWithFrame:frame])) {
+		[self initialization];
+    }
+	
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	if((self = [super initWithCoder:aDecoder])) {
+		[self initialization];
+	}
+	
+	return self;
+}
+
+#pragma mark -
+
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+	[super drawRect:rect];
+	
+	if([stylusPoints count] > 0) {
+		// Drawing code
+		CGContextRef context = UIGraphicsGetCurrentContext();
+		
+		if (context) {			
+			CGContextSaveGState(context);
+			
+			CGContextSetLineWidth(context, 0.5);
+			CGContextSetStrokeColorWithColor(context, stylusColor.CGColor);					
+
+			CGPoint point = self.center;
+
+			CGContextMoveToPoint(context, point.x, point.y);
+			
+			// make sure we do not add any more points/clear it whilst we are trying to draw it
+			@synchronized(stylusPoints) {
+				for(StylusMove* stylusPoint in stylusPoints) {
+					//NSLog(@"%@", stylusPoint);
+					
+					point.x += stylusPoint.xMovement;
+					point.y += stylusPoint.yMovement;
+
+					CGContextAddLineToPoint(context, point.x, point.y);
+				}
+			}
+			
+			currentPoint = point;
+			
+			CGContextStrokePath(context);
+			
+			if(showCurrentPointOnNextDisplay) {
+				showCurrentPointOnNextDisplay = NO;
+				
+				CGContextSetFillColorWithColor(context, stylusColor.CGColor);			
+				CGContextSetAlpha(context, 0.6);
+				CGContextMoveToPoint(context, currentPoint.x, currentPoint.y);
+				CGContextAddArc(context, currentPoint.x, currentPoint.y, 10, 360, 0, 1);
+				CGContextFillPath(context);
+			}
+			
+			CGContextRestoreGState(context);
+		}		
+	}
+}
+
+- (void)dealloc {
+	[stylusPoints release];
+	[stylusColor release];
+	
+    [super dealloc];
+}
+
+
+@end
